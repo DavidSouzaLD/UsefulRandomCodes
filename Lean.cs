@@ -18,8 +18,8 @@ public class Lean : MonoBehaviour
     [SerializedField, Tooltip("Max degrees per second to lean")]
     private float maxLeanSpeed = 90f;
 
-    private float integral;
-    private float lastError;
+    private float _integral;
+    private float _lastError;
 
     public float CurrentLeanAngle => Vector3.SignedAngle(Vector3.up, transform.up, transform.forward);
     private Rigidbody Rigidbody { get; set; };
@@ -36,9 +36,9 @@ public class Lean : MonoBehaviour
 
         // Step 2: Calculate PID output
         var error = targetAngle - currentAngle;
-        integral += error * Time.fixedDeltaTime;
+        _integral += error * Time.fixedDeltaTime;
         var derivative = (error - lastError) / Time.fixedDeltaTime;
-        lastError = error;
+        _lastError = error;
         var pidOutput = kp * error + ki * integral + kd * derivative;
 
         // Step 3: Clamp angular change to avoid overshoot
